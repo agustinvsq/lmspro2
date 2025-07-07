@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id         Int        @id @default(autoincrement())
+  name       String
+  email      String     @unique
+  password   String
+  employees  Employee[]
+  courses    Course[]
+  createdAt  DateTime   @default(now())
+}
+
+model Employee {
+  id          Int        @id @default(autoincrement())
+  company     Company    @relation(fields: [companyId], references: [id])
+  companyId   Int
+  name        String
+  email       String     @unique
+  enrollments Enrollment[]
+}
+
+model Course {
+  id         Int         @id @default(autoincrement())
+  company    Company     @relation(fields: [companyId], references: [id])
+  companyId  Int
+  title      String
+  modules    Module[]
+  createdAt  DateTime    @default(now())
+}
+
+model Module {
+  id         Int         @id @default(autoincrement())
+  course     Course      @relation(fields: [courseId], references: [id])
+  courseId   Int
+  title      String
+  content    Json
+  quizzes    Quiz[]
+}
+
+model Quiz {
+  id           Int      @id @default(autoincrement())
+  module       Module   @relation(fields: [moduleId], references: [id])
+  moduleId     Int
+  questions    Json
+  isEvaluacion Boolean
+}
+
+model Enrollment {
+  id          Int        @id @default(autoincrement())
+  employee    Employee   @relation(fields: [employeeId], references: [id])
+  employeeId  Int
+  course      Course     @relation(fields: [courseId], references: [id])
+  courseId    Int
+  linkToken   String     @unique
+  assignedAt  DateTime   @default(now())
+  completed   Boolean    @default(false)
+}
