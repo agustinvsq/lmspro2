@@ -1,3 +1,4 @@
+// components/courses/ModuleForm.tsx
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
@@ -35,4 +36,5 @@ export default function ModuleForm({ courseId, onCreated }) {
         Crear módulo
       </button>
     </div>
+  );
 }
