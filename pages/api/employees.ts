@@ -10,7 +10,7 @@ handler.use(authenticate);
 handler.use(upload.single('file'));
 
 handler.post(async (req, res) => {
-  const file = req.file;
+  const file = (req as any).file;
   if (!file) return res.status(400).json({ error: 'No file' });
   const records = parse(file.buffer.toString(), { columns: true });
   const created = [];
