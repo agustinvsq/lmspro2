@@ -19,7 +19,11 @@ handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
   const created = [];
   for (const record of records) {
     const emp = await prisma.employee.create({
-      data: { companyId: req.companyId, name: record.name, email: record.email }
+      data: {
+        companyId: (req as any).companyId,
+        name: record.name,
+        email: record.email
+      }
     });
     created.push(emp);
   }
