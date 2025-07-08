@@ -1,3 +1,4 @@
+// pages/auth/login.tsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -7,13 +8,18 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async () => {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/company/login`,
-      { email, password }
-    );
-    localStorage.setItem('token', res.data.token);
-    router.push('/dashboard');
+  const submit = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/company/login`,
+        { email, password }
+      );
+      localStorage.setItem('token', res.data.token);
+      router.push('/dashboard');
+    } catch (err) {
+      console.error('Error al iniciar sesión', err);
+      alert('Credenciales inválidas');
+    }
   };
 
   return (
@@ -34,10 +40,11 @@ export default function Login() {
         className="w-full p-2 border rounded mb-4"
       />
       <button
-        onClick={handleSubmit}
+        onClick={submit}
         className="w-full p-2 rounded-xl border-2 border-matteBlack hover:bg-matteBlack hover:text-white transition"
       >
         Ingresar
       </button>
     </div>
+  );
 }
