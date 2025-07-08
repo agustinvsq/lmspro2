@@ -1,17 +1,20 @@
+// pages/api/employees.ts
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import { parse } from 'csv-parse/sync';
 import { prisma } from '../../lib/prisma';
 import { authenticate } from '../../utils/auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const upload = multer();
-const handler = nextConnect();
+const handler = nextConnect<NextApiRequest, NextApiResponse>();
 handler.use(authenticate);
 handler.use(upload.single('file'));
 
-handler.post(async (req, res) => {
+handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
   const file = (req as any).file;
   if (!file) return res.status(400).json({ error: 'No file' });
+
   const records = parse(file.buffer.toString(), { columns: true });
   const created = [];
   for (const record of records) {
@@ -21,11 +24,6 @@ handler.post(async (req, res) => {
     created.push(emp);
   }
   res.json({ employees: created });
-});
-
-handler.get(async (req, res) => {
-  const employees = await prisma.employee.findMany({ where: { companyId: req.companyId } });
-  res.json({ employees });
 });
 
 export const config = { api: { bodyParser: false } };
