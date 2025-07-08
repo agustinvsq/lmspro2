@@ -1,3 +1,4 @@
+// pages/auth/register.tsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -9,12 +10,17 @@ export default function Register() {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/company/register`,
-      { name, email, password }
-    );
-    localStorage.setItem('token', res.data.token);
-    router.push('/dashboard');
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/company/register`,
+        { name, email, password }
+      );
+      localStorage.setItem('token', res.data.token);
+      router.push('/dashboard');
+    } catch (err) {
+      console.error('Error al registrarse', err);
+      alert('No se pudo crear la cuenta');
+    }
   };
 
   return (
@@ -48,4 +54,5 @@ export default function Register() {
         Crear Cuenta
       </button>
     </div>
+  );
 }
