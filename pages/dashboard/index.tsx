@@ -1,3 +1,4 @@
+// pages/dashboard/index.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -6,10 +7,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/courses`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).then(res => setCourses(res.data));  
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/courses`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => setCourses(res.data))
+      .catch(err => console.error(err));
   }, []);
 
   return (
@@ -21,4 +24,5 @@ export default function Dashboard() {
         ))}
       </ul>
     </div>
+  );
 }
