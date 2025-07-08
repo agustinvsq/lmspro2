@@ -1,5 +1,5 @@
 // pages/dashboard/index.tsx
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -20,10 +20,24 @@ export default function Dashboard() {
     <div className="p-6">
       <h1 className="text-3xl mb-4">Dashboard</h1>
       <nav className="flex space-x-4 mb-6">
-        <button onClick={() => setView('employees')} className={`px-4 py-2 rounded ${view==='employees'? 'bg-matteBlack text-white':'border border-matteBlack'}`}>Empleados</button>
-        <button onClick={() => setView('courses')} className={`px-4 py-2 rounded ${view==='courses'? 'bg-matteBlack text-white':'border border-matteBlack'}`}>Cursos</button>
+        <button
+          onClick={() => setView('employees')}
+          className={`px-4 py-2 rounded ${
+            view === 'employees' ? 'bg-matteBlack text-white' : 'border border-matteBlack'
+          }`}
+        >
+          Empleados
+        </button>
+        <button
+          onClick={() => setView('courses')}
+          className={`px-4 py-2 rounded ${
+            view === 'courses' ? 'bg-matteBlack text-white' : 'border border-matteBlack'
+          }`}
+        >
+          Cursos
+        </button>
       </nav>
-      {view === 'employees' ? <EmployeesSection token={token!}/> : <CoursesSection token={token!}/>}
+      {view === 'employees' ? <EmployeesSection token={token!} /> : <CoursesSection token={token!} />}
     </div>
   );
 }
@@ -47,10 +61,16 @@ function EmployeesSection({ token }: { token: string }) {
   return (
     <div>
       <h2 className="text-2xl mb-4">Gestionar Empleados</h2>
-      <input type="file" accept=".csv" onChange={e => setFile(e.target.files?.[0]||null)} className="mb-2" />
-      <button onClick={upload} className="px-4 py-2 rounded-xl border-2 border-matteBlack">Subir CSV</button>
+      <input type="file" accept=".csv" onChange={e => setFile(e.target.files?.[0] || null)} className="mb-2" />
+      <button onClick={upload} className="px-4 py-2 rounded-xl border-2 border-matteBlack">
+        Subir CSV
+      </button>
       <ul className="mt-4">
-        {list.map(e => <li key={e.id}>{e.name} - {e.email}</li>)}
+        {list.map(e => (
+          <li key={e.id}>
+            {e.name} – {e.email}
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -61,10 +81,10 @@ function CoursesSection({ token }: { token: string }) {
   const [title, setTitle] = useState('');
 
   useEffect(() => {
-    axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/courses`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).then(res => setCourses(res.data));
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/courses`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => setCourses(res.data))
+      .catch(err => console.error(err));
   }, []);
 
   const create = async () => {
@@ -81,11 +101,20 @@ function CoursesSection({ token }: { token: string }) {
     <div>
       <h2 className="text-2xl mb-4">Gestionar Cursos</h2>
       <div className="flex mb-4">
-        <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="Título del curso" className="border p-2 flex-1 mr-2"/>
-        <button onClick={create} className="px-4 py-2 rounded-xl border-2 border-matteBlack">Crear Curso</button>
+        <input
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="Título del curso"
+          className="border p-2 flex-1 mr-2"
+        />
+        <button onClick={create} className="px-4 py-2 rounded-xl border-2 border-matteBlack">
+          Crear Curso
+        </button>
       </div>
       <ul>
-        {courses.map(c => <li key={c.id}>{c.title}</li>)}
+        {courses.map(c => (
+          <li key={c.id}>{c.title}</li>
+        ))}
       </ul>
     </div>
   );
